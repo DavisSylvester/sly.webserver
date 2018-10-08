@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",        
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "noImplicitAny": false,        
+        "inlineSourceMap": true,
+        "sourceRoot": "./apps/assets/ts",
+        "rootDir": "./src",        
+        "removeComments": true,
+        "declarationMap": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "baseUrl": "./src",
+        "lib": [
+            "es2016",
+            "es2015",
+            "es6",
+            "dom"
+        ]    
+    },
+    "exclude": [
+        "node_modules",
+        "./tools/**",
+        "gulpfile.ts"
+    ],
+    
+}

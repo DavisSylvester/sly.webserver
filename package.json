@@ -2,12 +2,12 @@
   "name": "sly-webserver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["express", "sly-webserver"],
+  "author": "Davis Sylvester <davis@sylvesterllc.com>",
   "license": "ISC",
   "dependencies": {
     "@types/express": "^4.16.0",
@@ -15,6 +15,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-minify": "^3.1.0",
     "gulp-uglify": "^3.0.1",
