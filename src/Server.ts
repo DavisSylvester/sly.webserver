@@ -7,6 +7,7 @@ import { settings } from "./configuration/settings";
 export class Server {
 
     private app: e.Application;
+    
     // private router: e.Router;
 
 
@@ -30,16 +31,18 @@ export class Server {
         
         let assetsDir = this.config.AssetDirectory;
         let TsDir = this.config.TsDirectory;
-
+        const appRoot = "./../../../"
         
         app.use(e.static("app"));
         app.use("/node_modules", e.static("node_modules"));
         app.use("/assets", e.static(assetsDir));
         app.use("/ts", e.static(TsDir));
+
+
         
         app.get("/", (req, res) => {
             // console.log(`DIR: ${__dirname}`);
-            let rootDir = path.join(this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(appRoot, this.config.RootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
         });
@@ -49,13 +52,13 @@ export class Server {
             // console.log(`DIR: ${__dirname}`);
             // console.log(__dirname + "../../../app/index.html");
 
-            let rootDir = path.join(this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(appRoot, this.config.RootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
         });
 
         app.get('*', (req, res) => {
-            let rootDir = path.join(this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(appRoot, this.config.RootDirectory, this.config.DefaultPage);
             res.sendFile(rootDir);
         });
 

@@ -3,5 +3,8 @@
     "compilerOptions": {
         "outDir": "./app",
         "watch": true
-    }
+    },
+    "include": [
+        "./src/index.ts"
+    ]
 }
