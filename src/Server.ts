@@ -19,7 +19,7 @@ export class Server {
 
     }
 
-    public startServer(applicationRootDirectory: string): void {
+    public startServer(applicationRootDirectory = "app"): void {
         this.applicationRootDirectory = applicationRootDirectory;
 
         this.configureServer(this.app);
@@ -28,13 +28,10 @@ export class Server {
     }
 
     private configureServer(app: e.Application): void {
-
-        // console.log(`Env: ${process.env}`);
-        // console.log(__dirname);
         
         let assetsDir = this.config.AssetDirectory;
         let TsDir = this.config.TsDirectory;
-        const appRoot = "./../../../"
+        const appRoot = path.join(__dirname, "./../../../");
         
         app.use(e.static("app"));
         app.use("/node_modules", e.static("node_modules"));
@@ -45,7 +42,8 @@ export class Server {
         
         app.get("/", (req, res) => {
             // console.log(`DIR: ${__dirname}`);
-            let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
+            // let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
         });
@@ -55,13 +53,13 @@ export class Server {
             // console.log(`DIR: ${__dirname}`);
             // console.log(__dirname + "../../../app/index.html");
 
-            let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
         });
 
         app.get('*', (req, res) => {
-            let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
             res.sendFile(rootDir);
         });
 
