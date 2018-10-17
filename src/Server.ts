@@ -7,6 +7,7 @@ import { settings } from "./configuration/settings";
 export class Server {
 
     private app: e.Application;
+    private applicationRootDirectory: string = "";
     
     // private router: e.Router;
 
@@ -18,7 +19,9 @@ export class Server {
 
     }
 
-    public startServer(): void {
+    public startServer(applicationRootDirectory: string): void {
+        this.applicationRootDirectory = applicationRootDirectory;
+
         this.configureServer(this.app);
 
 
@@ -42,7 +45,7 @@ export class Server {
         
         app.get("/", (req, res) => {
             // console.log(`DIR: ${__dirname}`);
-            let rootDir = path.join(appRoot, this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
         });
@@ -52,13 +55,13 @@ export class Server {
             // console.log(`DIR: ${__dirname}`);
             // console.log(__dirname + "../../../app/index.html");
 
-            let rootDir = path.join(appRoot, this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
         });
 
         app.get('*', (req, res) => {
-            let rootDir = path.join(appRoot, this.config.RootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
             res.sendFile(rootDir);
         });
 
@@ -69,6 +72,8 @@ export class Server {
 
         app.listen(port, host, () => {
             console.log(`Server has been started at Http://${host}:${port}`);
+            console.log(`Application is Serving from: 
+                ${ path.join(this.applicationRootDirectory, this.config.RootDirectory)}`);
         }).on('error', (err) => {
             
             port = port + 1;            
