@@ -41,18 +41,13 @@ export class Server {
 
         
         app.get("/", (req, res) => {
-            // console.log(`DIR: ${__dirname}`);
+            
             let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
-            // let rootDir = path.join(this.applicationRootDirectory, this.config.RootDirectory, this.config.DefaultPage);
-
             res.sendFile(rootDir);
         });
 
-        // console.log(`DIR: ${__dirname + "./../../app/index.html"}`);
         app.get("", (req, res) => {
-            // console.log(`DIR: ${__dirname}`);
-            // console.log(__dirname + "../../../app/index.html");
-
+            
             let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
@@ -70,8 +65,7 @@ export class Server {
 
         app.listen(port, host, () => {
             console.log(`Server has been started at Http://${host}:${port}`);
-            console.log(`Application is Serving from: 
-                ${ path.join(__dirname, "./../../../", this.applicationRootDirectory)}`);
+            console.log(`Application is Serving from: ${ path.join(__dirname, "./../../../", this.applicationRootDirectory)}`);
         }).on('error', (err) => {
             
             port = port + 1;            
