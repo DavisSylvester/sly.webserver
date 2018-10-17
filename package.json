@@ -1,6 +1,6 @@
 {
   "name": "sly-webserver",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A small development Web Server for testing Web Applications",
   "main": "app/index.js",
   "scripts": {

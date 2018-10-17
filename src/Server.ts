@@ -71,7 +71,7 @@ export class Server {
         app.listen(port, host, () => {
             console.log(`Server has been started at Http://${host}:${port}`);
             console.log(`Application is Serving from: 
-                ${ path.join(this.applicationRootDirectory, this.config.RootDirectory)}`);
+                ${ path.join(__dirname, "./../../../", this.applicationRootDirectory)}`);
         }).on('error', (err) => {
             
             port = port + 1;            
