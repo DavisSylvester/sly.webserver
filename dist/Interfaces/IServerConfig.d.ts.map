@@ -1,0 +1,1 @@
+{"version":3,"file":"IServerConfig.d.ts","sourceRoot":"./apps/assets/ts/","sources":["Interfaces/IServerConfig.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,aAAa;IAE1B,IAAI,EAAE,MAAM,CAAC;IACb,QAAQ,EAAE,MAAM,CAAC;IACjB,eAAe,EAAE,MAAM,CAAC;IACxB,cAAc,EAAE,MAAM,CAAC;IACvB,aAAa,EAAE,MAAM,CAAC;IACtB,cAAc,EAAE,MAAM,CAAC;IACvB,WAAW,EAAE,MAAM,CAAC;IACpB,WAAW,EAAE,MAAM,CAAA;CACtB"}

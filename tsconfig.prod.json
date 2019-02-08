@@ -2,7 +2,7 @@
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "outFile": "./dist/sly.webserver.js",
+        // "outFile": "./dist/sly.webserver.js",
             
     }
 }

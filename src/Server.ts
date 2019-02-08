@@ -1,5 +1,6 @@
 // import * as e from "express";
 import e from "express";
+import { Router } from "express";
 import path = require("path");
 import { IServerConfig } from "./Interfaces/index";
 import { settings } from "./configuration/settings";
@@ -7,16 +8,12 @@ import { settings } from "./configuration/settings";
 export class Server {
 
     private app: e.Application;
-    private applicationRootDirectory: string = "";
-    
-    // private router: e.Router;
-
+    private applicationRootDirectory: string = "";       
 
     constructor(private config: IServerConfig = settings) {
         this.app = e();
         
-        // this.router = e.Router();
-
+        
     }
 
     public startServer(applicationRootDirectory = "app"): void {
@@ -25,6 +22,17 @@ export class Server {
         this.configureServer(this.app);
 
 
+    }
+
+    public createRouter(): Router {
+
+        let router = Router();
+        return router;
+
+    }
+
+    public applyRouter(routes: Router) {
+        this.app.use(routes);
     }
 
     private configureServer(app: e.Application): void {
