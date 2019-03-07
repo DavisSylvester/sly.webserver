@@ -10,14 +10,21 @@ export class Server {
     private app: e.Application;
     private applicationRootDirectory: string = "";       
 
+    get App(): e.Application {
+        return this.app;
+    }
+
     constructor(private config: IServerConfig = settings) {
         this.app = e();
         
-        
+        console.log(`Root Directory: ${__dirname}`);
+
     }
 
-    public startServer(applicationRootDirectory = "app"): void {
-        this.applicationRootDirectory = applicationRootDirectory;
+    public startServer(applicationRootDirectory: string|null = null): void {
+
+        let appRoot = path.join(__dirname, "./../../../app");
+        this.applicationRootDirectory = (applicationRootDirectory === null) ? appRoot : applicationRootDirectory;
 
         this.configureServer(this.app);
 
@@ -39,9 +46,9 @@ export class Server {
         
         let assetsDir = this.config.AssetDirectory;
         let TsDir = this.config.TsDirectory;
-        const appRoot = path.join(__dirname, "./../../../");
         
-        app.use(e.static("app"));
+        
+        app.use(e.static(this.applicationRootDirectory));
         app.use("/node_modules", e.static("node_modules"));
         app.use("/assets", e.static(assetsDir));
         app.use("/ts", e.static(TsDir));
@@ -50,19 +57,19 @@ export class Server {
         
         app.get("/", (req, res) => {
             
-            let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(this.applicationRootDirectory, this.config.DefaultPage);
             res.sendFile(rootDir);
         });
 
         app.get("", (req, res) => {
             
-            let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(this.applicationRootDirectory, this.config.DefaultPage);
 
             res.sendFile(rootDir);
         });
 
         app.get('*', (req, res) => {
-            let rootDir = path.join(appRoot, this.applicationRootDirectory, this.config.DefaultPage);
+            let rootDir = path.join(this.applicationRootDirectory, this.config.DefaultPage);
             res.sendFile(rootDir);
         });
 
@@ -73,7 +80,7 @@ export class Server {
 
         app.listen(port, host, () => {
             console.log(`Server has been started at Http://${host}:${port}`);
-            console.log(`Application is Serving from: ${ path.join(__dirname, "./../../../", this.applicationRootDirectory)}`);
+            console.log(`Application is Serving from: ${ this.applicationRootDirectory}`);
         }).on('error', (err) => {
             
             port = port + 1;            
