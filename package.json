@@ -1,12 +1,15 @@
 {
   "name": "sly-webserver",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "A small development Web Server for testing Web Applications",
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["express", "sly-webserver"],
+  "keywords": [
+    "express",
+    "sly-webserver"
+  ],
   "author": "Davis Sylvester <davis@sylvesterllc.com>",
   "license": "ISC",
   "dependencies": {
@@ -22,6 +25,7 @@
     "gulp-uglify-es": "^1.0.4",
     "gulp-umd": "^2.0.0",
     "plumber": "^0.4.8",
+    "sly-webserver": "^1.0.9",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.1"
   }

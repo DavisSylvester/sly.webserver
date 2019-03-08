@@ -1,55 +1,73 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const e = require("express");
-const path = require("path");
-const settings_1 = require("./configuration/settings");
-class Server {
-    // private router: e.Router;
-    constructor(config = settings_1.settings) {
+exports.__esModule = true;
+// import * as e from "express";
+var express_1 = require("express");
+var express_2 = require("express");
+var path = require("path");
+var settings_1 = require("./configuration/settings");
+var Server = /** @class */ (function () {
+    function Server(config) {
+        if (config === void 0) { config = settings_1.settings; }
         this.config = config;
-        this.app = e();
-        // this.router = e.Router();
+        this.applicationRootDirectory = "";
+        this.app = express_1["default"]();
+        console.log("Root Directory: " + __dirname);
     }
-    startServer() {
+    Object.defineProperty(Server.prototype, "App", {
+        get: function () {
+            return this.app;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Server.prototype.startServer = function (applicationRootDirectory) {
+        if (applicationRootDirectory === void 0) { applicationRootDirectory = null; }
+        var appRoot = path.join(__dirname, "./../../../app");
+        this.applicationRootDirectory = (applicationRootDirectory === null) ? appRoot : applicationRootDirectory;
+        console.log("this.applicationRootDirectory: " + this.applicationRootDirectory);
         this.configureServer(this.app);
-    }
-    configureServer(app) {
-        // console.log(`Env: ${process.env}`);
-        // console.log(__dirname);
-        let assetsDir = this.config.AssetDirectory;
-        let TsDir = this.config.TsDirectory;
-        app.use(e.static("app"));
-        app.use("/node_modules", e.static("node_modules"));
-        app.use("/assets", e.static(assetsDir));
-        app.use("/ts", e.static(TsDir));
-        app.get("/", (req, res) => {
-            // console.log(`DIR: ${__dirname}`);
-            let rootDir = path.join(this.config.RootDirectory, this.config.DefaultPage);
+    };
+    Server.prototype.createRouter = function () {
+        var router = express_2.Router();
+        return router;
+    };
+    Server.prototype.applyRouter = function (routes) {
+        this.app.use(routes);
+    };
+    Server.prototype.configureServer = function (app) {
+        var _this = this;
+        var assetsDir = this.config.AssetDirectory;
+        var TsDir = this.config.TsDirectory;
+        app.use(express_1["default"].static(this.applicationRootDirectory));
+        app.use("/node_modules", express_1["default"].static("node_modules"));
+        app.use("/assets", express_1["default"].static(assetsDir));
+        app.use("/ts", express_1["default"].static(TsDir));
+        app.get("/", function (req, res) {
+            var rootDir = path.join(_this.applicationRootDirectory, _this.config.DefaultPage);
             res.sendFile(rootDir);
         });
-        // console.log(`DIR: ${__dirname + "./../../app/index.html"}`);
-        app.get("", (req, res) => {
-            // console.log(`DIR: ${__dirname}`);
-            // console.log(__dirname + "../../../app/index.html");
-            let rootDir = path.join(this.config.RootDirectory, this.config.DefaultPage);
+        app.get("", function (req, res) {
+            var rootDir = path.join(_this.applicationRootDirectory, _this.config.DefaultPage);
             res.sendFile(rootDir);
         });
-        app.get('*', (req, res) => {
-            let rootDir = path.join(this.config.RootDirectory, this.config.DefaultPage);
+        app.get('*', function (req, res) {
+            var rootDir = path.join(_this.applicationRootDirectory, _this.config.DefaultPage);
             res.sendFile(rootDir);
         });
         this.applyWebServerListener(this.config.Port, this.config.Hostname, app);
-    }
-    applyWebServerListener(port, host, app) {
-        app.listen(port, host, () => {
-            console.log(`Server has been started at Http://${host}:${port}`);
-        }).on('error', (err) => {
+    };
+    Server.prototype.applyWebServerListener = function (port, host, app) {
+        var _this = this;
+        app.listen(port, host, function () {
+            console.log("Server has been started at Http://" + host + ":" + port);
+            console.log("Application is Serving from: " + _this.applicationRootDirectory);
+        }).on('error', function (err) {
             port = port + 1;
             settings_1.settings.Port = port;
             settings_1.settings.BrowserSyncPort = settings_1.settings.BrowserSyncPort + 1;
-            this.applyWebServerListener(port, host, app);
+            _this.applyWebServerListener(port, host, app);
         });
-    }
-}
+    };
+    return Server;
+}());
 exports.Server = Server;
-//# sourceMappingURL=Server.js.map

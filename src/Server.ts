@@ -26,6 +26,7 @@ export class Server {
         let appRoot = path.join(__dirname, "./../../../app");
         this.applicationRootDirectory = (applicationRootDirectory === null) ? appRoot : applicationRootDirectory;
 
+        console.log(`this.applicationRootDirectory: ${this.applicationRootDirectory}`);
         this.configureServer(this.app);
 
 
@@ -45,8 +46,7 @@ export class Server {
     private configureServer(app: e.Application): void {
         
         let assetsDir = this.config.AssetDirectory;
-        let TsDir = this.config.TsDirectory;
-        
+        let TsDir = this.config.TsDirectory;       
         
         app.use(e.static(this.applicationRootDirectory));
         app.use("/node_modules", e.static("node_modules"));

@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",        
+        "target": "es2015",        
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
@@ -14,7 +14,7 @@
         "declaration": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "baseUrl": "./src",
+        "baseUrl": "./",
         "lib": [
             "es2016",
             "es2015",

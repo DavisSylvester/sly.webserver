@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.settings = {
     Port: 5303,
     Hostname: "localhost",
@@ -10,4 +10,3 @@ exports.settings = {
     AssetDirectory: "app/assets",
     DefaultPage: "index.html"
 };
-//# sourceMappingURL=settings.js.map
