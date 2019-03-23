@@ -1,6 +1,6 @@
-/// <reference types="socket.io" />
 import e from "express";
 import { Router } from "express";
+import * as io from "socket.io";
 import { IServerConfig } from "./Interfaces/index";
 export declare class Server {
     private enableSocketio;
@@ -9,11 +9,11 @@ export declare class Server {
     private http;
     private socket;
     private applicationRootDirectory;
-    private enableSocketIO;
+    protected enableSocketIO: boolean;
     readonly App: e.Application;
-    readonly Io: SocketIO.Server;
-    constructor(enableSocketio?: boolean, config?: IServerConfig);
-    startServer(applicationRootDirectory?: string | null): void;
+    readonly Io: io.SocketIO.Server;
+    constructor(enableSocketio?: boolean, applicationRootDirectory?: string | null, config?: IServerConfig);
+    startServer(): void;
     createRouter(): Router;
     applyRouter(routes: Router): void;
     private configureServer;

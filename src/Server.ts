@@ -3,7 +3,8 @@ import e from "express";
 import { Router } from "express";
 // const http = require('http'); // Import Node types
 import http = require('http'); // Import Node types
-const io = require("socket.io");
+// const io = require("socket.io");
+import * as io from "socket.io";
 import path = require("path");
 import { IServerConfig } from "./Interfaces/index";
 import { settings } from "./configuration/settings";
@@ -13,7 +14,7 @@ export class Server {
 
     private app: e.Application;
     private http: http.Server;
-    private socket: SocketIO.Server;
+    private socket: io.SocketIO.Server;
     private applicationRootDirectory: string = "";
     protected enableSocketIO = false;
 
@@ -22,7 +23,7 @@ export class Server {
         return this.app;
     }
 
-    get Io(): SocketIO.Server {
+    get Io(): io.SocketIO.Server {
 
         return this.Io;
     } 
