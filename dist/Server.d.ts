@@ -1,6 +1,6 @@
 import e from "express";
 import { Router } from "express";
-import * as io from "socket.io";
+import io = require("socket.io");
 import { IServerConfig } from "./Interfaces/index";
 export declare class Server {
     private enableSocketio;

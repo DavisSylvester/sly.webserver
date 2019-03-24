@@ -4,7 +4,7 @@ import { Router } from "express";
 // const http = require('http'); // Import Node types
 import http = require('http'); // Import Node types
 // const io = require("socket.io");
-import * as io from "socket.io";
+import io = require("socket.io");
 import path = require("path");
 import { IServerConfig } from "./Interfaces/index";
 import { settings } from "./configuration/settings";
