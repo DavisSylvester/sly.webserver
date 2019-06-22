@@ -7,5 +7,6 @@ export interface IServerConfig {
     RootDirectory: string,
     AssetDirectory: string,
     TsDirectory: string,
-    DefaultPage: string
+    DefaultPage: string,
+    useHttps: boolean
 }

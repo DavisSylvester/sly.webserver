@@ -11,6 +11,8 @@ export const settings: IServerConfig  = {
     TsDirectory: "app/assets/ts",
     AssetDirectory: "app/assets",
 
+    useHttps: false,
+
     DefaultPage: "index.html"
 };
 

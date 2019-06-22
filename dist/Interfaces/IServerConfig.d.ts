@@ -7,5 +7,6 @@ export interface IServerConfig {
     AssetDirectory: string;
     TsDirectory: string;
     DefaultPage: string;
+    useHttps: boolean;
 }
 //# sourceMappingURL=IServerConfig.d.ts.map

@@ -1,137 +1,139 @@
 // import * as e from "express";
-import e from "express";
+import e, { Request, Response, NextFunction, Application } from "express";
 import { Router } from "express";
-// const http = require('http'); // Import Node types
-import http = require('http'); // Import Node types
-// const io = require("socket.io");
-import io = require("socket.io");
+import https = require("https"); // Import Node types
+import http = require("http"); // Import Node types
+import io, { Socket } from "socket.io";
 import path = require("path");
 import { IServerConfig } from "./Interfaces/index";
 import { settings } from "./configuration/settings";
-import { Http2SecureServer } from "http2";
+import { Http2SecureServer, IncomingHttpStatusHeader } from "http2";
+import { runInThisContext } from "vm";
 
 export class Server {
+  private app: e.Application;
+  private http: http.Server | https.Server;
+  private socket: io.Server;
+  private applicationRootDirectory: string = "";
+  protected enableSocketIO = false;
 
-    private app: e.Application;
-    private http: http.Server;
-    private socket: io.SocketIO.Server;
-    private applicationRootDirectory: string = "";
-    protected enableSocketIO = false;
+  get App(): e.Application {
+    return this.app;
+  }
 
+  get Io(): io.Server {
+    return this.socket;
+  }
 
-    get App(): e.Application {
-        return this.app;
+  constructor(
+    private enableSocketio = false,
+    private config: IServerConfig = settings
+  ) {
+    this.app = e();
+    this.http = http.createServer(this.app);
+    this.enableSocketIO = enableSocketio;
+
+    if (this.enableSocketIO) {
+      this.socket = io(this.http);
     }
 
-    get Io(): io.SocketIO.Server {
+    let appRoot =
+      this.config && this.config.RootDirectory
+        ? this.config.RootDirectory
+        : path.join(__dirname, "./../../../app");
+  }
 
-        return this.Io;
-    } 
+  public startServer(): void {
+    this.configureServer(this.app);
+  }
 
-    constructor(private enableSocketio = false, applicationRootDirectory: string|null = null,
-        private config: IServerConfig = settings) {
-        this.app = e();
-        // this.http = http.Server(this.app);
-        this.http = http.createServer(this.app);
-        this.socket = io(this.http);
-        this.enableSocketIO = enableSocketio;
+  public createRouter(): Router {
+    let router = Router();
+    return router;
+  }
 
-        
-        let appRoot = path.join(__dirname, "./../../../app");
-        this.applicationRootDirectory = (applicationRootDirectory === null) ? appRoot : applicationRootDirectory;
+  public applyRouter(routes: Router) {
+    this.app.use(routes);
+  }
 
-        console.log(`this.applicationRootDirectory: ${this.applicationRootDirectory}`);
-        
+  private configureServer(app: e.Application): void {
+    let assetsDir = this.config.AssetDirectory;
+    let TsDir = this.config.TsDirectory;
+
+    app.use(e.static(this.applicationRootDirectory));
+    app.use("/node_modules", e.static("node_modules"));
+    app.use("/assets", e.static(assetsDir));
+    app.use("/ts", e.static(TsDir));
+
+    app.get("/", (req, res) => {
+      let rootDir = path.join(
+        this.applicationRootDirectory,
+        this.config.DefaultPage
+      );
+      res.sendFile(rootDir);
+    });
+
+    app.get("", (req, res) => {
+      let rootDir = path.join(
+        this.applicationRootDirectory,
+        this.config.DefaultPage
+      );
+
+      res.sendFile(rootDir);
+    });
+
+    app.get("*", (req, res) => {
+      let rootDir = path.join(
+        this.applicationRootDirectory,
+        this.config.DefaultPage
+      );
+      res.sendFile(rootDir);
+    });
+
+    if (this.enableSocketIO) {
+      this.startSocketIOServer();
+    } else {
+      this.applyWebServerListener(this.config.Port, this.config.Hostname, app);
     }
+  }
 
-    public startServer(): void {       
-        
-        this.configureServer(this.app);
+  private applyWebServerListener(
+    port: number,
+    host: string,
+    app: e.Application
+  ): void {
+    app
+      .listen(port, host, () => {
+        console.log(`Server has been started at Http://${host}:${port}`);
+        console.log(
+          `Application is Serving from: ${this.applicationRootDirectory}`
+        );
+      })
+      .on("error", err => {
+        port = port + 1;
+        settings.Port = port;
+        settings.BrowserSyncPort = settings.BrowserSyncPort + 1;
+        this.applyWebServerListener(port, host, app);
+      });
+  }
 
+  private configureHttporHttps(useHttps: boolean) {
+    // if (useHttps) {
+    //     this.http = https.createServer({
 
-    }
+    //     }, this.app);
 
-    public createRouter(): Router {
+    // } else {
+    //     this.http = http.createServer(this.app);
+    // }
 
-        let router = Router();
-        return router;
+    this.http = http.createServer(this.app);
+  }
 
-    }
-
-    public applyRouter(routes: Router) {
-        this.app.use(routes);
-    }
-
-    private configureServer(app: e.Application): void {
-
-        let assetsDir = this.config.AssetDirectory;
-        let TsDir = this.config.TsDirectory;
-
-        app.use(e.static(this.applicationRootDirectory));
-        app.use("/node_modules", e.static("node_modules"));
-        app.use("/assets", e.static(assetsDir));
-        app.use("/ts", e.static(TsDir));
-
-
-
-        app.get("/", (req, res) => {
-
-            let rootDir = path.join(this.applicationRootDirectory, this.config.DefaultPage);
-            res.sendFile(rootDir);
-        });
-
-        app.get("", (req, res) => {
-
-            let rootDir = path.join(this.applicationRootDirectory, this.config.DefaultPage);
-
-            res.sendFile(rootDir);
-        });
-
-        app.get('*', (req, res) => {
-            let rootDir = path.join(this.applicationRootDirectory, this.config.DefaultPage);
-            res.sendFile(rootDir);
-        });
-
-        if (this.enableSocketIO) {
-            this.startSocketIOServer(this.config.Port, this.config.Hostname, app);
-        }
-        else {
-            this.applyWebServerListener(this.config.Port, this.config.Hostname, app)
-        }
-    }
-
-    private applyWebServerListener(port: number, host: string, app: e.Application): void {
-
-        app.listen(port, host, () => {
-            console.log(`Server has been started at Http://${host}:${port}`);
-            console.log(`Application is Serving from: ${this.applicationRootDirectory}`);
-        }).on('error', (err) => {
-
-            port = port + 1;
-            settings.Port = port;
-            settings.BrowserSyncPort = settings.BrowserSyncPort + 1;
-            this.applyWebServerListener(port, host, app);
-        });
-    }
-
-    private startSocketIOServer(port: number, host: string, app: e.Application): void {
-
-        this.socket.on('connection', (socket) =>{
-            console.log(`connection`);
-            console.log('a user is connected');
-           });
-
-           
-        
-           this.http.listen(port, host, () => {
-            console.log(`Http and Socket.IO Server has been started at Http://${host}:${port}`);
-            console.log(`Application is Serving from: ${this.applicationRootDirectory}`);
-        }).on('error', (err) => {
-
-            port = port + 1;
-            settings.Port = port;
-            settings.BrowserSyncPort = settings.BrowserSyncPort + 1;
-            this.startSocketIOServer(port, host, app);
-        });
-    }
+  private startSocketIOServer(): void {
+    this.socket.on("connection", socket => {
+      console.log(`connection`);
+      console.log("a user is connected");
+    });
+  }
 }

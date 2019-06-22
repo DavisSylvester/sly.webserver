@@ -1,6 +1,6 @@
 import e from "express";
 import { Router } from "express";
-import io = require("socket.io");
+import io from "socket.io";
 import { IServerConfig } from "./Interfaces/index";
 export declare class Server {
     private enableSocketio;
@@ -11,13 +11,14 @@ export declare class Server {
     private applicationRootDirectory;
     protected enableSocketIO: boolean;
     readonly App: e.Application;
-    readonly Io: io.SocketIO.Server;
-    constructor(enableSocketio?: boolean, applicationRootDirectory?: string | null, config?: IServerConfig);
+    readonly Io: io.Server;
+    constructor(enableSocketio?: boolean, config?: IServerConfig);
     startServer(): void;
     createRouter(): Router;
     applyRouter(routes: Router): void;
     private configureServer;
     private applyWebServerListener;
+    private configureHttporHttps;
     private startSocketIOServer;
 }
 //# sourceMappingURL=Server.d.ts.map
